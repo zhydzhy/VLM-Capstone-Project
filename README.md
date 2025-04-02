@@ -1,9 +1,11 @@
 # Replication based on 3CSim
 
 ### Projected Goals
-I. Replicate the 32 edge cases in Carla Simulator
-II. Generate Data Set from Carla
+I. Replicate the 32 edge cases in Carla Simulator <br>
+II. Generate Data Set from Carla <br>
 III. Expand cases and/or sensor fusion with LiDar
+
+<br>
 
 
 
