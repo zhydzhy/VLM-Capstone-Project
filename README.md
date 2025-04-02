@@ -1,3 +1,20 @@
+# Replication based on 3CSim
+
+### Projected Goals
+I. Replicate the 32 edge cases in Carla Simulator
+II. Generate Data Set from Carla
+III. Expand cases and/or sensor fusion with LiDar
+
+
+
+
+
+
+
+
+
+
+
 # 3CSim: CARLA Corner Case Simulation for Control Assessment in Autonomous Driving
 [[PAPER]](https://doi.org/10.1109/CICT64037.2024.10899666) 
 
