@@ -64,13 +64,13 @@ folders = [
 ]
 
 # Define paths to python scripts
-main_script_path = 'C:/carla/PythonAPI/examples/custom_synchronous/'
+main_script_path = '/home/vlmteam/VLM_Ccapstone-Project/scripts/'
 python_script_1 = os.path.join(main_script_path, 'weather_control.py')
 python_script_2 = None
 python_script_3 = 'E:/CARLA/images/img_to_video.py'
 
 # Path to the main folder containing all the daytime_weather folders
-main_folder_path = 'E:/CARLA/corner cases carla/successful/'
+main_folder_path = '/home/vlmteam/VLM_Ccapstone-Project/scripts/'
 
 # Path to the E_folder where the 'rgb' and 'semantic' folders, and the 'video.mp4' file are located
 E_folder_path = 'E:/CARLA/images/'
