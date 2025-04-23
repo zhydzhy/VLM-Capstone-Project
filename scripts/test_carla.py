@@ -1,35 +1,17 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Copyright (c) 2024 IISLab at the Technical University of Košice.
-#
-# This work is licensed under the terms of the MIT license.
-# For a copy, see <https://opensource.org/licenses/MIT>.
-
-import sys
 import os
-import glob
+import sys
 
-try:
-    # Dynamic path to CARLA .egg file
-    sys.path.append(glob.glob(os.path.join(
-        '/home/vlmteam/carla_0.9.14/PythonAPI/carla/dist',  # Base CARLA path
-        'carla-*%d.%d-%s.egg' % (                            # Dynamic pattern
-            sys.version_info.major,
-            sys.version_info.minor,
-            'win-amd64' if os.name == 'nt' else 'linux-x86_64'
-        )
-    ))[0])
-except IndexError:
-    pass
+carla_egg_path = "/home/vlmteam/carla_0.9.14/PythonAPI/carla/dist/carla-0.9.14-py3.7-linux-x86_64.egg"
+sys.path.append(carla_egg_path)
 
-# Path to CARLA PythonAPI source directory (absolute path)
-sys.path.append('/home/vlmteam/carla_0.9.14/PythonAPI')
-
-# Now import CARLA
-
-import carla
+# Path to CARLA PythonAPI source directory (contains util/)
+carla_api_path = "/home/vlmteam/carla_0.9.14/PythonAPI/"
+sys.path.append(carla_api_path)
 from util import *
 
+
+import carla
+import time
 
 # List of possible sun states in the form of (altitude, azimuth)
 sun_states = [(45.0, 240.0), # Noon
@@ -112,14 +94,14 @@ def main():
     world = client.get_world()
 
     # Cycle through all the possible weather states
-    #for i in range(len(sun_states) * len(storm_states)):
-        #world_change_weather(world)
+    for i in range(len(sun_states) * len(storm_states)):
+        world_change_weather(world)
         #print(weather)
-        #time.sleep(5)
+        time.sleep(5)
     
     # Reset the weather to the first state
     world_change_weather(world)
-    #print(weather)
+    print(weather)
 
 if __name__ == '__main__':
 

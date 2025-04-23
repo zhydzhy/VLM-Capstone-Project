@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import shutil
 import subprocess
@@ -5,23 +7,23 @@ import subprocess
 # List of scenarios
 # Scenario name, Python script name
 scenarios = [
-    ('PedestrianAdvesarialPlayground', 'spawn_pedestrian_adversarial_playground.py'), # Done, can be failed by complying with the sign on the shirt - used for LLM reasoning evaluation
+   # ('PedestrianAdvesarialPlayground', 'spawn_pedestrian_adversarial_playground.py'), # Done, can be failed by complying with the sign on the shirt - used for LLM reasoning evaluation
     
     ('FootballHighway', 'spawn_ball_highway.py'), # Done
     ('RoadworksWithExcavator', 'spawn_dangerous_excavator.py'), # Done, barriers on the ground, no excavator arm movement
     ('ParkingHGV', 'spawn_parking_HGV.py'), # Done, by default the ego vehicle will pass the HGV
-    ('ShoppingcartRollingDown', 'spawn_shoppingcart_highway,py') # Done, by default the ego vehicle will near miss the shopping cart
+    ('ShoppingcartRollingDown', 'spawn_shoppingcart_highway.py'), # Done, by default the ego vehicle will near miss the shopping cart
 
     ('SquirrelRunningAcrossTheRoad', 'spawn_squirrel_running_across.py'), # Done, by default the ego vehicle will pass above the squirrel
     # Adversarial scenarios for visual neural network evaluation
-    ('PedestrianAdvesarial_front_ENDALL', 'spawn_pedestrian_advesarial_front_ENDALL.py') # Done, overweight pedestrian with a end all restriction sign on his shirt
-    ('PedestrianAdvesarial_front_LEFTRIGHT', 'spawn_pedestrian_advesarial_front_LEFTRIGHT.py') # Done, sport pedestrian with a left/right turn only sign on her shirt
-    ('PedestrianAdvesarial_front_STOP', 'spawn_pedestrian_advesarial_front_STOP.py') # Done, pedestrian with a STOP sign on his shirt
-    ('PedestrianAdvesarial_back_ENDALL', 'spawn_pedestrian_advesarial_back_ENDALL.py') # Done, overweight pedestrian with a end all restriction sign on his shirt
-    ('PedestrianAdvesarial_back_LEFTRIGHT', 'spawn_pedestrian_advesarial_back_LEFTRIGHT.py') # Done, sport pedestrian with a left/right turn only sign on her shirt
-    ('PedestrianAdvesarial_back_STOP', 'spawn_pedestrian_advesarial_back_STOP.py') # Done, sport pedestrian with a left/right turn only sign on her shirt
+    ('PedestrianAdvesarial_front_ENDALL', 'spawn_pedestrian_advesarial_front_ENDALL.py'), # Done, overweight pedestrian with a end all restriction sign on his shirt
+    ('PedestrianAdvesarial_front_LEFTRIGHT', 'spawn_pedestrian_advesarial_front_LEFTRIGHT.py'), # Done, sport pedestrian with a left/right turn only sign on her shirt
+    ('PedestrianAdvesarial_front_STOP', 'spawn_pedestrian_advesarial_front_STOP.py'), # Done, pedestrian with a STOP sign on his shirt
+    ('PedestrianAdvesarial_back_ENDALL', 'spawn_pedestrian_advesarial_back_ENDALL.py'), # Done, overweight pedestrian with a end all restriction sign on his shirt
+    ('PedestrianAdvesarial_back_LEFTRIGHT', 'spawn_pedestrian_advesarial_back_LEFTRIGHT.py'), # Done, sport pedestrian with a left/right turn only sign on her shirt
+    ('PedestrianAdvesarial_back_STOP', 'spawn_pedestrian_advesarial_back_STOP.py'), # Done, sport pedestrian with a left/right turn only sign on her shirt
     ('CarForwardParkingAndReverseNoHarm', 'spawn_car_forward_parking_noharm.py'), # Done, by default the ego vehicle will pass the car
-    ('CowWithPedestrianCrossing','spawn_cow_and_pedestrian_crossing.py') # Done, by default the ego vehicle will let the cow pass
+    ('CowWithPedestrianCrossing','spawn_cow_and_pedestrian_crossing.py'), # Done, by default the ego vehicle will let the cow pass
     ('LooseZooAnimals', 'spawn_loose_zoo_animals.py'), # Done, by default the ego vehicle will run over both animals
     # The following scenarios are not suitable for the current setup (traffic manager autopilot)
     ('CarReverseParkingWithDoors', 'spawn_car_reverse_parking_doors.py'), # Done, by default the ego vehicle will hit the car doors
@@ -64,24 +66,24 @@ folders = [
 ]
 
 # Define paths to python scripts
-main_script_path = '/home/vlmteam/VLM_Ccapstone-Project/scripts/'
+base_path = '/home/vlmteam/VLM-Capstone-Project'
+main_script_path = os.path.join(base_path, 'scripts')
+base_scenario_path = os.path.join(base_path, 'scripts/scenario_files')
+image_output_path = os.path.join(base_path, 'images')
 python_script_1 = os.path.join(main_script_path, 'weather_control.py')
 python_script_2 = None
-python_script_3 = 'E:/CARLA/images/img_to_video.py'
+python_script_3 = os.path.join(main_script_path, 'img_to_video.py')
 
 # Path to the main folder containing all the daytime_weather folders
-main_folder_path = '/home/vlmteam/VLM_Ccapstone-Project/scripts/'
-
-# Path to the E_folder where the 'rgb' and 'semantic' folders, and the 'video.mp4' file are located
-E_folder_path = 'E:/CARLA/images/'
+os.makedirs(image_output_path, exist_ok=True)
 
 # Iterate through each scenario
 for scenario_name, scenario_path in scenarios:
-    python_script_2 = os.path.join(main_script_path, scenario_path)
+    python_script_2 = os.path.join(base_scenario_path, scenario_path)
     # Iterate through each daytime_weather folder
     for folder_name in folders:
         # Define the path to the current daytime_weather folder
-        folder_path = os.path.join(main_folder_path, folder_name)
+        folder_path = os.path.join(main_script_path, folder_name)
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
         
@@ -100,18 +102,15 @@ for scenario_name, scenario_path in scenarios:
             subprocess.run(['python', python_script_3], check=True)
             
             # Move the 'rgb' and 'semantic' folders, and the 'video.mp4' file to the 'scenario_name' folder
+            # Move results
             for item in ['rgb', 'semantic', 'video.mp4']:
-                source_path = os.path.join(E_folder_path, item)
-                destination_path = os.path.join(scenario_folder_path, item)
-                
-                if os.path.exists(source_path):
-                    if os.path.isdir(source_path):
-                        shutil.move(source_path, destination_path)
-                    elif os.path.isfile(source_path):
-                        shutil.move(source_path, scenario_folder_path)
+                source = os.path.join(image_output_path, item)
+                if os.path.exists(source):
+                    if os.path.isdir(source):
+                        shutil.move(source, scenario_path)
+                    else:
+                        shutil.move(source, os.path.join(scenario_path, item))
 
             print(f'Successfully processed and moved items to {scenario_folder_path}')
-        else:
-            print(f'Folder {folder_name} does not exist in {main_folder_path}')
 
 print("All tasks completed successfully.")

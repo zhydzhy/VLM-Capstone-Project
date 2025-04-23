@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # Copyright (c) 2024 IISLab at the Technical University of Košice.
 #
 # This work is licensed under the terms of the MIT license.
@@ -12,14 +12,25 @@ import time
 import random
 
 try:
-    sys.path.append(glob.glob('../carla/dist/carla-*%d.%d-%s.egg' % (
-        sys.version_info.major,
-        sys.version_info.minor,
-        'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
+    # Dynamic path to CARLA .egg file
+    sys.path.append(glob.glob(os.path.join(
+        '/home/vlmteam/carla_0.9.14/PythonAPI/carla/dist',  # Base CARLA path
+        'carla-*%d.%d-%s.egg' % (                            # Dynamic pattern
+            sys.version_info.major,
+            sys.version_info.minor,
+            'win-amd64' if os.name == 'nt' else 'linux-x86_64'
+        )
+    ))[0])
 except IndexError:
     pass
 
+# Path to CARLA PythonAPI source directory (absolute path)
+sys.path.append('/home/vlmteam/carla_0.9.14/PythonAPI')
+
+# Now import CARLA
+
 import carla
+from util import *
 from checks import is_inside_bounding_box, get_vehicle_speed, update_trigger_points
 
 class FootballHighway():
@@ -123,19 +134,23 @@ class FootballHighway():
         print('Scenario is destroying %d actors' % len(self.actor_list))
         client.apply_batch([carla.command.DestroyActor(x) for x in self.actor_list])
 
+def handle_collision(event):
+    print('Ego vehicle collided with:', event.other_actor.type_id)
+
+
+
 def main():
-    path = 'E:/CARLA/images/'
+    path = '/home/vlmteam/VLM-Capstone-Project/images/'
     scenario_timer = 600
     vehicles_list = []
     walkers_list = []
-    client = carla.Client('127.0.0.1', 2000)
+    client = carla.Client('127.0.0.1', 2002)
     client.set_timeout(5.0)
     seed = int(time.time())
     random.seed(seed)
 
     try:
         world = client.get_world()
-
         traffic_manager = client.get_trafficmanager(8000)
         traffic_manager.set_global_distance_to_leading_vehicle(0.05)
         traffic_manager.set_random_device_seed(seed)
@@ -157,7 +172,6 @@ def main():
         vehicles_list.append(ego_vehicle_actor)
         # Tick world to update the simulation
         world.tick()
-
         # Set ego vehicle autopilot, if you have custom ego vehicle controller,
         # you should disable autopilot and use your controller to control the ego vehicle here
         ego_vehicle_actor.set_autopilot(True)
@@ -167,7 +181,9 @@ def main():
         # Add collision sensor to ego vehicle
         collision_sensor = world.spawn_actor(blueprint_library.find('sensor.other.collision'), carla.Transform(), attach_to=ego_vehicle_actor)
         vehicles_list.insert(len(vehicles_list)-1,collision_sensor)
-        collision_sensor.listen(lambda event: print('Ego vehicle colided with: ', event.other_actor.type_id))
+        collision_sensor.listen(
+            collision_sensor.listen(handle_collision)
+        )
         # Create RGB camera for ego vehicle
         bp_camera = blueprint_library.find('sensor.camera.rgb')
         bp_camera.set_attribute("image_size_x",str(1280))

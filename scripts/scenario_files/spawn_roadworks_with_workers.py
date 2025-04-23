@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# -*- coding: utf-8 -*-
 # Copyright (c) 2024 IISLab at the Technical University of Košice.
 #
 # This work is licensed under the terms of the MIT license.
