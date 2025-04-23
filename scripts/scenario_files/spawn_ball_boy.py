@@ -163,7 +163,7 @@ class BoyFootball():
 
 # Main function
 def main():
-   path = '/home/vlmteam/VLM-Capstone-Project/images/'
+    path = '/home/vlmteam/VLM-Capstone-Project/images/'
     scenario_timer = 600
     vehicles_list = []
     walkers_list = []
