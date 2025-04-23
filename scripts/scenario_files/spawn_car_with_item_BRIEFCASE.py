@@ -12,15 +12,25 @@ import os
 import sys
 
 try:
-    sys.path.append(glob.glob('../carla/dist/carla-*%d.%d-%s.egg' % (
-        sys.version_info.major,
-        sys.version_info.minor,
-        'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
+    # Dynamic path to CARLA .egg file
+    sys.path.append(glob.glob(os.path.join(
+        '/home/vlmteam/carla_0.9.14/PythonAPI/carla/dist',  # Base CARLA path
+        'carla-*%d.%d-%s.egg' % (                            # Dynamic pattern
+            sys.version_info.major,
+            sys.version_info.minor,
+            'win-amd64' if os.name == 'nt' else 'linux-x86_64'
+        )
+    ))[0])
 except IndexError:
     pass
 
-import random
+# Path to CARLA PythonAPI source directory (absolute path)
+sys.path.append('/home/vlmteam/carla_0.9.14/PythonAPI')
+
+# Now import CARLA
 import carla
+from util import *
+import random
 import time
 from checks import is_inside_bounding_box, get_vehicle_speed, update_trigger_points
 
@@ -176,11 +186,11 @@ class CarWithItem():
 
 
 def main():
-    path = 'E:/CARLA/images/'
+    path = '/home/vlmteam/VLM-Capstone-Project/images/'
     scenario_timer = 1000
     vehicles_list = []
     walkers_list = []
-    client = carla.Client('127.0.0.1', 2000)
+    client = carla.Client('127.0.0.1', 2002)
     client.set_timeout(5.0)
     seed = 321321
     random.seed(seed)

@@ -28,7 +28,6 @@ except IndexError:
 sys.path.append('/home/vlmteam/carla_0.9.14/PythonAPI')
 
 # Now import CARLA
-
 import carla
 from util import *
 from checks import is_inside_bounding_box, get_vehicle_speed, update_trigger_points
