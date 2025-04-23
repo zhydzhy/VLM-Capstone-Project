@@ -201,7 +201,9 @@ def main():
         bp_ego_vehicle = blueprint_library.find('vehicle.dodge.charger_2020')
         bp_ego_vehicle.set_attribute('role_name', 'ego')
         # Spawn ego vehicle
-        ego_vehicle_actor = world.spawn_actor(bp_ego_vehicle, carla.Transform(carla.Location(x=230.80, y=31.90, z=0.2), carla.Rotation(pitch=0, roll=0, yaw=90)))
+        spawn_points = world.get_map().get_spawn_points()
+        ego_transform = spawn_points[0]
+        ego_vehicle_actor = world.spawn_actor(bp_ego_vehicle, ego_transform)
         vehicles_list.append(ego_vehicle_actor)
         
         # Tick world to update the simulation
